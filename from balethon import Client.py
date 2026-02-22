@@ -2,13 +2,13 @@ import requests
 import time
 import json
 
-# ===================== تنظیمات =====================
+
 BOT_TOKEN = "1161179518:fDsW1ujcnjivEIAPfPySnWeV8IcmnEtNotKmtERs"
 BASE_URL = f"https://tapi.bale.ai/bot{BOT_TOKEN}/"
 NESHAN_API_KEY = "service.23ed45dcc78e4f9a80bd5eb25cd6b2f5"
 DATA_FILE = "routes_data.json"
 
-# ===================== ذخیره مسیر =====================
+    
 def save_route(data):
     try:
         old_data = []
@@ -23,7 +23,7 @@ def save_route(data):
     except Exception as e:
         print("خطا در ذخیره:", e)
 
-# ===================== ارسال پیام =====================
+    
 def send_message(chat_id, text):
     url = BASE_URL + "sendMessage"
     data = {"chat_id": chat_id, "text": text}
@@ -32,7 +32,7 @@ def send_message(chat_id, text):
     except Exception as e:
         print("خطا در ارسال پیام:", e)
 
-# ===================== اعتبارسنجی مختصات =====================
+    
 def valid_coordinate_pair(s):
     try:
         lat, lon = map(float, s.split(","))
@@ -40,11 +40,10 @@ def valid_coordinate_pair(s):
     except:
         return False
 
-# ===================== لینک نهایی مسیر‌یابی نشان =====================
 def neshn_route_link(origin, destination, vehicle="d"):
     return f"https://nshn.ir/?origin={origin}&destination={destination}&vehicle={vehicle}"
 
-# ===================== درخواست مسیر =====================
+
 def get_route(origin, destination):
     url = f"https://api.neshan.org/v2/direction?origin={origin}&destination={destination}"
     headers = {"Api-Key": NESHAN_API_KEY}
@@ -61,7 +60,7 @@ def get_route(origin, destination):
         print("خطا در دریافت مسیر:", e)
         return None
 
-# ===================== پردازش پیام =====================
+ 
 def handle_message(text, chat_id):
     if "->" not in text:
         send_message(chat_id, "لطفا مختصات را به شکل زیر ارسال کنید:\n35.6892,51.3890 -> 35.7006,51.3370")
@@ -94,7 +93,7 @@ def handle_message(text, chat_id):
     }
     save_route(record)
 
-    # لینک نهایی مسیر‌یابی نشان
+      
     link = neshn_route_link(origin_raw, destination_raw)
     msg_text = (
         f"📍 مسیر پیدا شد:\n"
@@ -105,7 +104,7 @@ def handle_message(text, chat_id):
     )
     send_message(chat_id, msg_text)
 
-# ===================== getUpdates =====================
+   
 def get_updates(offset=None):
     url = BASE_URL + "getUpdates"
     params = {}
@@ -118,7 +117,7 @@ def get_updates(offset=None):
         print("خطا در getUpdates:", e)
         return {"result": []}
 
-# ===================== حلقه اصلی =====================
+   
 def main():
     last_update_id = None
     print("ربات فعال شد...")
